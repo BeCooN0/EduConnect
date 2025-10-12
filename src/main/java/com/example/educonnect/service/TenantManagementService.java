@@ -27,7 +27,7 @@ public class TenantManagementService {
         String sanitized = schemaName.toLowerCase().replaceAll("\\s", "")
                 .replaceAll("[^a-z0-9_]", "");
         if (sanitized.isEmpty() || !sanitized.equals(schemaName.trim())){
-            throw new IllegalStateException("Invalid characters in schema name");
+            throw new IllegalArgumentException("Invalid characters in schema name");
         }
         return sanitized;
     }
