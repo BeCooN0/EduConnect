@@ -14,13 +14,22 @@ public class TenantManagementService {
     private final JdbcTemplate jdbcTemplate;
 
     public void createTenantSchema(String schemaName) {
-        jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS + schemaName");
+        String validatedName = validateSchemaName(schemaName);
+        jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + validatedName);
         Flyway flyway = Flyway.configure()
                 .locations("db/migration/tenant")
                 .dataSource(dataSource)
-                .schemas(schemaName)
+                .schemas(validatedName)
                 .load();
         flyway.migrate();
+    }
+    private String validateSchemaName(String schemaName){
+        String sanitized = schemaName.toLowerCase().replaceAll("\\s", "")
+                .replaceAll("[^a-z0-9_]", "");
+        if (sanitized.isEmpty() || !sanitized.equals(schemaName.trim())){
+            throw new IllegalStateException("Invalid characters in schema name");
+        }
+        return sanitized;
     }
 
 }
