@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,8 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
-    UserResponseDto registerUser(UserRequestDto userRequestDto){
+    @Transactional
+    public UserResponseDto registerUser(UserRequestDto userRequestDto){
         User user = modelMapper.map(userRequestDto, User.class);
         user.setRole(UserRole.USER_ROLE);
         user.setPasswordHash(passwordEncoder.encode(userRequestDto.getPasswordHash()));
