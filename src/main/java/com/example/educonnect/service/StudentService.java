@@ -6,6 +6,8 @@ import com.example.educonnect.entity.Student;
 import com.example.educonnect.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,5 +19,9 @@ public class StudentService {
         Student student = modelMapper.map(studentRequestDto, Student.class);
         Student saved = studentRepository.save(student);
         return modelMapper.map(saved, StudentResponseDto.class);
+    }
+    public Page<StudentResponseDto> getAllStudents(Pageable pageable){
+        Page<Student> students = studentRepository.findAll(pageable);
+        return students.map(student -> modelMapper.map(student, StudentResponseDto.class));
     }
 }

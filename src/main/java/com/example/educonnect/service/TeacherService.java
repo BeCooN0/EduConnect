@@ -20,6 +20,7 @@ public class TeacherService {
         Teacher saved = teacherRepository.save(teacher);
         return modelMapper.map(saved, TeacherResponseDto.class);
     }
+
     public Page<TeacherResponseDto> getAllTeacher(Pageable pageable){
         Page<Teacher> all = teacherRepository.findAll(pageable);
         return all.map(teacher -> modelMapper.map(teacher, TeacherResponseDto.class));
