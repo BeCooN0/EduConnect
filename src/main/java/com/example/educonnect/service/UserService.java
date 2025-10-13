@@ -21,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
+
     private final JwtService jwtService;
     @Transactional
     public UserResponseDto registerUser(UserRequestDto userRequestDto){
