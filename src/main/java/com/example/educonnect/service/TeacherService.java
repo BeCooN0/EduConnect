@@ -25,4 +25,10 @@ public class TeacherService {
         Page<Teacher> all = teacherRepository.findAll(pageable);
         return all.map(teacher -> modelMapper.map(teacher, TeacherResponseDto.class));
     }
+    public TeacherResponseDto updateTeacher(Long teacherId, TeacherRequestDto teacherRequestDto){
+        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow();
+        modelMapper.map(teacherRequestDto, teacher);
+        Teacher saved = teacherRepository.save(teacher);
+        return modelMapper.map(saved, TeacherResponseDto.class);
+    }
 }

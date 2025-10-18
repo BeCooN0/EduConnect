@@ -22,6 +22,11 @@ public class CourseService {
         course.setTeacher(teacher);
         Course saved = courseRepository.save(course);
         return modelMapper.map(saved, CourseResponseDto.class);
-
+    }
+    public CourseResponseDto updateCourse(Long courseId, CourseRequestDto courseRequestDto){
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        modelMapper.map(courseRequestDto, course);
+        Course saved = courseRepository.save(course);
+        return modelMapper.map(saved, CourseResponseDto.class);
     }
 }
