@@ -14,14 +14,15 @@ public class TenantManagementService {
     private final JdbcTemplate jdbcTemplate;
 
     public void createTenantSchema(String schemaName) {
-        String validatedName = validateSchemaName(schemaName);
+        String validatedName = "tenant_" + validateSchemaName(schemaName);
         jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + validatedName);
         Flyway flyway = Flyway.configure()
-                .locations("db/migration/tenant")
+                .locations("classpath:db/migration/tenant")
                 .dataSource(dataSource)
                 .schemas(validatedName)
                 .load();
         flyway.migrate();
+        System.out.println("Tenant schema created and migrated: " + validatedName);
     }
     private String validateSchemaName(String schemaName){
         String sanitized = schemaName.toLowerCase().replaceAll("\\s", "")
