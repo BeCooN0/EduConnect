@@ -1,6 +1,7 @@
 package com.example.educonnect.entity;
 
 import com.example.educonnect.entity.common.Ownable;
+import com.example.educonnect.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +18,8 @@ public class Payment implements Ownable {
     @JoinColumn(name = "student_id" )
     private Student student;
     private BigDecimal amount;
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
     private Instant date;
 
     @Override

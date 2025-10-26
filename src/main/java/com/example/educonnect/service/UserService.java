@@ -26,7 +26,7 @@ public class UserService {
     @Transactional
     public UserResponseDto registerUser(UserRequestDto userRequestDto){
         User user = modelMapper.map(userRequestDto, User.class);
-        user.setRole(UserRole.USER_ROLE);
+        user.setRole(UserRole.STUDENT);
         user.setPasswordHash(passwordEncoder.encode(userRequestDto.getPasswordHash()));
         User saved = userRepository.save(user);
         return modelMapper.map(saved, UserResponseDto.class);

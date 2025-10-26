@@ -12,7 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/course")
+@RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;

@@ -8,6 +8,8 @@ import com.example.educonnect.repository.TenantRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -30,5 +32,10 @@ public class TenantService {
     public String generateIdentifierFromName(String name){
         return name.toLowerCase().replaceAll("\\s", "-" )
                 .replaceAll("[^a-z0-9-]", "");
+    }
+
+    public Page<TenantResponseDto> getAllTenant(Pageable pageable){
+        Page<Tenant> tenants = tenantRepository.findAll(pageable);
+        return tenants.map(tenant -> modelMapper.map(tenant, TenantResponseDto.class));
     }
 }

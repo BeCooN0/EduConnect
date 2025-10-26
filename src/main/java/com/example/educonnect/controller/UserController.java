@@ -20,7 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
     private final AuthService authService;

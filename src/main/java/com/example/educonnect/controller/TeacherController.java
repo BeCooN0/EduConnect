@@ -36,7 +36,7 @@ public class TeacherController {
         return ResponseEntity.ok(allTeacher);
     }
     @PutMapping("$/{teacherId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER') or @securityService.isOwner('teacher', principal, #teacherId)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER') or @authService.isOwner(principal, #teacherId, T(com.example.educonnect.entity.Teacher))")
     public ResponseEntity<TeacherResponseDto> updateTeacher(Long teacherId, @RequestBody TeacherRequestDto teacherRequestDto){
         TeacherResponseDto teacherResponseDto = teacherService.updateTeacher(teacherId, teacherRequestDto);
         return ResponseEntity.ok(teacherResponseDto);
