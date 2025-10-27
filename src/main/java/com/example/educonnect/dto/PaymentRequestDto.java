@@ -1,5 +1,6 @@
 package com.example.educonnect.dto;
 
+import com.example.educonnect.entity.enums.PaymentStatus;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,6 +10,6 @@ import java.time.Instant;
 public class PaymentRequestDto {
     private Long studentId;
     private BigDecimal amount;
-    private boolean status;
+    private PaymentStatus status;
     private Instant date;
 }
