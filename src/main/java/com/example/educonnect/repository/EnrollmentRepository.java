@@ -11,4 +11,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     @Query("SELECT e FROM Enrollment e GROUP BY e.course.id ORDER BY count(e.id) DESC")
 
     List<Long> findMostPopularCourseId(Pageable pageable);
+
+    @Query("select count (s.student.id) from Enrollment s")
+    Long getTotalStudents();
 }

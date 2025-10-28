@@ -4,6 +4,7 @@ import com.example.educonnect.dto.PaymentRequestDto;
 import com.example.educonnect.dto.PaymentResponseDto;
 import com.example.educonnect.entity.Payment;
 import com.example.educonnect.entity.Student;
+import com.example.educonnect.entity.enums.PaymentStatus;
 import com.example.educonnect.repository.PaymentRepository;
 import com.example.educonnect.repository.StudentRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +25,7 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setAmount(paymentRequestDto.getAmount());
         payment.setStudent(student);
-        payment.setStatus(true);
+        payment.setStatus(PaymentStatus.PAID);
         Payment saved = paymentRepository.save(payment);
         return modelMapper.map(saved, PaymentResponseDto.class);
     }
