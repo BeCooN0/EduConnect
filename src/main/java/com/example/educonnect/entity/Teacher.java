@@ -17,6 +17,11 @@ public class Teacher implements Ownable {
     private String phone, specialization;
 
     @Override
+    public String getTenantId() {
+        return "";
+    }
+
+    @Override
     public String getOwnerIdentifier() {
         return this.email;
     }

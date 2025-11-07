@@ -24,13 +24,18 @@ public class CourseController {
                 .path("/id")
                 .buildAndExpand(course.getId())
                 .toUri();
-
         return ResponseEntity.created(location).body(course);
     }
     @PutMapping("/{courseId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER') or @authService.isOwner(principal, #courseId, T(com.example.educonnect.entity.Course))")
+    @PreAuthorize("hasRole('ADMIN') or @authService.isOwner(principal, #courseId, T(com.example.educonnect.entity.Course))")
     public ResponseEntity<CourseResponseDto> updateCourse(@PathVariable Long courseId, @RequestBody CourseRequestDto courseRequestDto){
         CourseResponseDto courseResponseDto = courseService.updateCourse(courseId, courseRequestDto);
         return ResponseEntity.ok(courseResponseDto);
+    }
+    @DeleteMapping("/{courseId}")
+    @PreAuthorize("hasRole('ADMIN') or @authService.isOwner(principal, #courseId, T(com.example.educonnect.entity.Course))")
+    public ResponseEntity<Void> deleteCourse(@PathVariable Long courseId){
+        courseService.deleteCourse(courseId);
+        return ResponseEntity.noContent().build();
     }
 }

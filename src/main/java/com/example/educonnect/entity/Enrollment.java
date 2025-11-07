@@ -1,5 +1,6 @@
 package com.example.educonnect.entity;
 
+import com.example.educonnect.entity.common.Ownable;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import java.time.Instant;
 
 @Entity
 @Data
-public class Enrollment {
+public class Enrollment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,4 +19,5 @@ public class Enrollment {
     @JoinColumn(name = "course_id")
     private Course course;
     private Instant enrolledAt;
+
 }

@@ -20,6 +20,11 @@ public class Student implements Ownable {
     private boolean status;
 
     @Override
+    public String getTenantId() {
+        return "";
+    }
+
+    @Override
     public String getOwnerIdentifier() {
         return this.email;
     }

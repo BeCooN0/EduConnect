@@ -1,5 +1,8 @@
 package com.example.educonnect.entity.common;
 
 public interface Ownable {
-    String getOwnerIdentifier();
+    String getTenantId();
+    default String getOwnerIdentifier(){
+        return null;
+    }
 }

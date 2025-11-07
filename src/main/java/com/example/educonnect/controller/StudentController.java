@@ -43,4 +43,11 @@ public class StudentController {
         return ResponseEntity.ok(studentResponseDto);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT') or @authService.isOwner(principal, #id, T(com.example.educonnect.entity.Student))")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id){
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

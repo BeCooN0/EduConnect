@@ -1,64 +1,98 @@
 package com.example.educonnect.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 public class JwtService {
-    @Value("${jwt.password}")
-    private String password;
+
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
+
+    @Value("${app.security.jwt.secret}")
+    private String secret;
+
+    @Value("${app.security.jwt.access-exp-min}")
+    private int accessExpMinutes;
+
+    @Value("${app.security.jwt.refresh-exp-days}")
+    private int refreshExpDays;
+
     private SecretKey key;
-    @Value("${jwt.expiration}")
-    private long expiration;
+
     @PostConstruct
-    private void init(){
-        this.key = Keys.hmacShaKeyFor(password.getBytes());
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
-    public String generateToken(UserDetails userDetails, Map<String, Object> claims){
+
+    public String generateAccessToken(String email, String role, String tenant) {
+        Instant now = Instant.now();
+        Instant exp = now.plus(accessExpMinutes, ChronoUnit.MINUTES);
+
         return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
+                .subject(email)
+                .claims(Map.of(
+                        "role", role,
+                        "tenant_id", tenant
+                ))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(exp))
                 .signWith(key)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
                 .compact();
     }
-    public Claims getAllClaims(String token ){
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+
+
+    public String generateRefreshToken(String email) {
+        Instant now = Instant.now();
+        Instant exp = now.plus(refreshExpDays, ChronoUnit.DAYS);
+
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(exp))
+                .signWith(key)
+                .compact();
     }
 
-    public<T> T getClaims(String token, Function<Claims, T> claimsFunction){
-        Claims allClaims = getAllClaims(token);
-        return claimsFunction.apply(allClaims);
+    public Claims parseToken(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException e) {
+            log.warn("JWT parsing error: {}", e.getMessage());
+            throw new JwtException("Invalid or expired JWT: " + e.getMessage(), e);
+        }
     }
 
-    public String getUsername(String token){
-        return getClaims(token, Claims::getSubject);
-    }
-    public Date getExpiration(String token){
-        return getClaims(token, Claims::getExpiration);
+    public String getUsername(String token) {
+        return parseToken(token).getSubject();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails){
-       return getClaims(token, claims -> {
-           return claims.getSubject().equals(userDetails.getUsername()) && !claims.getExpiration().before(new Date());
-       });
+    public String getTenantId(String token) {
+        return parseToken(token).get("tenant_id", String.class);
     }
-    public String getTenantId(String token){
-         return getClaims(token, claims ->
-                claims.get("tenantId", String.class));
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        try {
+            Claims claims = parseToken(token);
+            String username = claims.getSubject();
+            return username.equals(userDetails.getUsername());
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }

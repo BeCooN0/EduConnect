@@ -24,6 +24,11 @@ public class User implements Ownable {
     private boolean isActive;
 
     @Override
+    public String getTenantId() {
+        return "";
+    }
+
+    @Override
     public String getOwnerIdentifier() {
         return this.email;
     }

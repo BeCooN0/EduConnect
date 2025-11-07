@@ -23,6 +23,11 @@ public class Payment implements Ownable {
     private Instant date;
 
     @Override
+    public String getTenantId() {
+        return "";
+    }
+
+    @Override
     public String getOwnerIdentifier() {
         return student.getEmail();
     }
