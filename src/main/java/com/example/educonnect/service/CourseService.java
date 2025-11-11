@@ -9,8 +9,9 @@ import com.example.educonnect.repository.CourseRepository;
 import com.example.educonnect.repository.TeacherRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,5 +53,14 @@ public class CourseService {
         } catch (Exception e) {
             throw new RuntimeException("Cannot delete course. It is referenced by other records.", e);
         }
+    }
+    public Page<CourseResponseDto> getAllCourses(Pageable pageable){
+        Page<Course> allCourses = courseRepository.findAll(pageable);
+        return allCourses.map(courseMapper::toDto);
+    }
+
+    public CourseResponseDto getCourse(Long courseId){
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        return courseMapper.toDto(course);
     }
 }

@@ -15,4 +15,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Long> findTopStudentsByPaidPayments(Pageable pageable);
     @Query("SELECT sum (p.amount) from Payment p where p.status ='PAID'")
     Double getTotalPaidAmount();
+
 }

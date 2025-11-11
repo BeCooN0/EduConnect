@@ -8,7 +8,46 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
-    @Query("SELECT e FROM Enrollment e GROUP BY e.course.id ORDER BY count(e.id) DESC")
+//    @Query("SELECT e FROM Enrollment e GROUP BY e.course.id ORDER BY count(e.id) DESC")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Query("SELECT e from Enrollment e GROUP BY e.course.id order by count (e.id) DESC")
 
     List<Long> findMostPopularCourseId(Pageable pageable);
 
