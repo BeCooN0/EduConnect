@@ -41,4 +41,16 @@ public class TeacherController {
         TeacherResponseDto teacherResponseDto = teacherService.updateTeacher(teacherId, teacherRequestDto);
         return ResponseEntity.ok(teacherResponseDto);
     }
+
+    @DeleteMapping("/{teacherId}")
+    @PreAuthorize("hasRole('ADMIN') or @authService.isOwner(principal, #teacherId, T(com.example.educonnect.entity.Teacher))")
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Long teacherId){
+        teacherService.deleteTeacher(teacherId);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{teacherId}")
+    public ResponseEntity<TeacherResponseDto> getTeacherById(@PathVariable Long teacherId){
+        TeacherResponseDto teacherById = teacherService.getTeacherById(teacherId);
+        return ResponseEntity.ok(teacherById);
+    }
 }
