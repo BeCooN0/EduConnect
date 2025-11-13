@@ -17,7 +17,7 @@ public class User implements Ownable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    private String passwordHash;
+    private String password;
     private String fullName;
     private UserRole role;
     private Instant createdAt;

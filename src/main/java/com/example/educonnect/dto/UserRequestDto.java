@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UserRequestDto {
     private String email;
-    private String passwordHash;
+    private String password;
     private String fullName;
     private String tenantId;
 }
