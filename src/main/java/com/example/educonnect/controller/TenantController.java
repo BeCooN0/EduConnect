@@ -33,4 +33,5 @@ public class TenantController {
         Page<TenantResponseDto> allTenant = tenantService.getAllTenant(pageable);
         return ResponseEntity.ok(allTenant);
     }
+
 }

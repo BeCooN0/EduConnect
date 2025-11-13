@@ -63,4 +63,9 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow();
         return courseMapper.toDto(course);
     }
+
+    public Page<CourseResponseDto> findCourseByTitle(String courseTitle, Pageable pageable){
+        Page<Course> byTitleContainingIgnoreCase = courseRepository.searchByTitleOrTeacher(courseTitle, pageable);
+        return byTitleContainingIgnoreCase.map(courseMapper::toDto);
+    }
 }

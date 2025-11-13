@@ -6,13 +6,13 @@ import com.example.educonnect.dto.StatisticsResponseDto;
 import com.example.educonnect.entity.Course;
 import com.example.educonnect.entity.Enrollment;
 import com.example.educonnect.entity.Student;
+import com.example.educonnect.mapper.EnrollmentMapper;
 import com.example.educonnect.repository.CourseRepository;
 import com.example.educonnect.repository.EnrollmentRepository;
 import com.example.educonnect.repository.PaymentRepository;
 import com.example.educonnect.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +24,10 @@ import java.util.List;
 @Slf4j
 public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
-    private final ModelMapper modelMapper;
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
     private final PaymentRepository paymentRepository;
-
+    private final EnrollmentMapper enrollmentMapper;
     public EnrollmentResponseDto addEnrollment(EnrollmentRequestDto enrollmentRequestDto) {
         Student student = studentRepository.findById(enrollmentRequestDto.getStudentId()).orElseThrow();
         Course course = courseRepository.findById(enrollmentRequestDto.getCourseId()).orElseThrow();
@@ -36,7 +35,7 @@ public class EnrollmentService {
         enrollment.setCourse(course);
         enrollment.setStudent(student);
         Enrollment saved = enrollmentRepository.save(enrollment);
-        return modelMapper.map(saved, EnrollmentResponseDto.class);
+        return enrollmentMapper.toDto(saved);
     }
 
     public StatisticsResponseDto getAllStatistics() {

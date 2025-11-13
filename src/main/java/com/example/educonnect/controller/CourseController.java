@@ -51,4 +51,9 @@ public class CourseController {
         CourseResponseDto course = courseService.getCourse(id);
         return ResponseEntity.ok(course);
     }
+    @GetMapping("/courseTitle")
+    public ResponseEntity<Page<CourseResponseDto>> findCourseByTitle(@RequestParam String courseTitle, @PageableDefault(size = 10, page = 0) Pageable pageable){
+        Page<CourseResponseDto> courseByTitle = courseService.findCourseByTitle(courseTitle, pageable);
+        return ResponseEntity.ok(courseByTitle);
+    }
 }

@@ -47,4 +47,9 @@ public class StudentService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public StudentResponseDto getStudentById(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return studentMapper.toDto(student);
+    }
 }

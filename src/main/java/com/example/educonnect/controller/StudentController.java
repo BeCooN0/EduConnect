@@ -42,12 +42,15 @@ public class StudentController {
         StudentResponseDto studentResponseDto = studentService.updateStudent(id, studentRequestDto);
         return ResponseEntity.ok(studentResponseDto);
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentResponseDto> getStudent(@PathVariable Long id){
+        StudentResponseDto studentById = studentService.getStudentById(id);
+        return ResponseEntity.ok(studentById);
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT') or @authService.isOwner(principal, #id, T(com.example.educonnect.entity.Student))")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
     }
-
 }
